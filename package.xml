@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<package packagerversion="1.5.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Piece_Unity_Component_JSON</name>
+ <channel>pear.piece-framework.com</channel>
+ <summary>A renderer to output view elements as JSON.</summary>
+ <description>A renderer to output view elements as JSON.</description>
+ <lead>
+  <name>KUBO Atsuhiro</name>
+  <user>iteman</user>
+  <email>iteman@users.sourceforge.net</email>
+  <active>yes</active>
+ </lead>
+ <developer>
+  <name>Chihiro Sakatoku</name>
+  <user>csakatoku</user>
+  <email>csakatoku@users.sourceforge.net</email>
+  <active>yes</active>
+ </developer>
+ <date>2007-07-15</date>
+ <time>19:53:20</time>
+ <version>
+  <release>1.0.0</release>
+  <api>1.0.0</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+ <notes>The first release of Piece_Unity_Component_JSON.</notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <dir name="Piece">
+    <dir name="Unity">
+     <dir name="Plugin">
+      <dir name="Renderer">
+       <file name="JSON.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /Piece/Unity/Plugin/Renderer -->
+     </dir> <!-- /Piece/Unity/Plugin -->
+    </dir> <!-- /Piece/Unity -->
+   </dir> <!-- /Piece -->
+   <dir name="tests">
+    <dir name="Piece">
+     <dir name="Unity">
+      <dir name="Plugin">
+       <dir name="Renderer">
+        <file name="JSONTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /tests/Piece/Unity/Plugin/Renderer -->
+      </dir> <!-- /tests/Piece/Unity/Plugin -->
+     </dir> <!-- /tests/Piece/Unity -->
+    </dir> <!-- /tests/Piece -->
+    <file name="prepare.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+   </dir> <!-- /tests -->
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.3</min>
+   </pearinstaller>
+   <package>
+    <name>Piece_Unity</name>
+    <channel>pear.piece-framework.com</channel>
+    <min>0.13.0</min>
+   </package>
+  </required>
+  <optional>
+   <package>
+    <name>HTML_AJAX</name>
+    <channel>pear.php.net</channel>
+    <min>0.5.0</min>
+   </package>
+   <package>
+    <name>PHPUnit</name>
+    <channel>pear.phpunit.de</channel>
+    <min>1.3.2</min>
+    <max>1.3.2</max>
+   </package>
+   <extension>
+    <name>json</name>
+   </extension>
+  </optional>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-07-15</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>The first release of Piece_Unity_Component_JSON.</notes>
+  </release>
+ </changelog>
+</package>
