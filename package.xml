@@ -20,8 +20,8 @@
   <email>csakatoku@users.sourceforge.net</email>
   <active>yes</active>
  </developer>
- <date>2007-07-15</date>
- <time>19:53:20</time>
+ <date>2007-07-16</date>
+ <time>20:09:56</time>
  <version>
   <release>1.0.0</release>
   <api>1.0.0</api>
@@ -74,7 +74,7 @@
    <package>
     <name>Piece_Unity</name>
     <channel>pear.piece-framework.com</channel>
-    <min>0.13.0</min>
+    <min>1.0.0</min>
    </package>
   </required>
   <optional>
@@ -105,7 +105,7 @@
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2007-07-15</date>
+   <date>2007-07-16</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>The first release of Piece_Unity_Component_JSON.</notes>
   </release>
