@@ -4,7 +4,8 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006 Chihiro Sakatoku <csakatoku@users.sourceforge.net>,
+ *               2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +31,8 @@
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Component_JSON
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006 Chihiro Sakatoku <csakatoku@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 1.0.0
@@ -39,21 +41,21 @@
 require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'HTML/AJAX/JSON.php';
-require_once 'Piece/Unity/Plugin/Renderer/JSON.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Plugin/View.php';
+require_once 'Piece/Unity/Plugin/Renderer/JSON.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_JSONTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Renderer_JSON
+ * Some tests for Piece_Unity_Plugin_Renderer_JSON.
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Component_JSON
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006 Chihiro Sakatoku <csakatoku@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 1.0.0
@@ -94,28 +96,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
-    function &getView($viewElements, $settings = array(), $class = 'Piece_Unity_Plugin_Renderer_JSON')
-    {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView(null);
-        $config = &new Piece_Unity_Config();
-        $config->setExtension('View', 'renderer', 'Renderer_JSON');
-        foreach ($settings as $key => $value) {
-            $config->setConfiguration('Renderer_JSON', $key, $value);
-        }
-
-        $viewElement = &$context->getViewElement();
-        foreach (array_keys($viewElements) as $key) {
-            $value = &$viewElements[$key];
-            $viewElement->setElementByRef($key, $value);
-        }
-
-        $context->setConfiguration($config);
-        $view = &new $class();
-        
-        return $view;
-    }
-
     function jsonEncode($value)
     {
         if (extension_loaded('json')) {
@@ -138,14 +118,18 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testEncodeWithPHPJSON()
     {
-        $value = array('content' => 'hello world');
-        $view = &$this->getView($value,
-                                array(),
-                                'Piece_Unity_Plugin_View'
-                               );
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'hello world');
+        $viewElement->setElement('__eventNameKey', 'foo');
+        $viewElement->setElement('__scriptName', 'bar');
+        $viewElement->setElement('__basePath', 'baz');
+        $config = &new Piece_Unity_Config();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
         $json = ob_get_contents();
         ob_end_clean();
 
@@ -159,11 +143,20 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     
     function testEncodeWithHTMLAJAX()
     {
-        $value = array('content' => 'hello world');
-        $view = &$this->getView($value, array('useHTMLAJAX' => true));
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'hello world');
+        $viewElement->setElement('__eventNameKey', 'foo');
+        $viewElement->setElement('__scriptName', 'bar');
+        $viewElement->setElement('__basePath', 'baz');
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'useHTMLAJAX', true);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
         $json = ob_get_contents();
         ob_end_clean();
 
@@ -175,6 +168,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     function testEncodeFailure()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $context = &Piece_Unity_Context::singleton();
 
         /*
          * test a view element which contains circular references.
@@ -183,14 +177,19 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $obj->favorite = 'Sake';
         $value = array(&$obj);
         $obj->self = &$value;
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', $value);
 
-        $view = &$this->getView($value,
-                                array('include' => array(),
-                                      'exclude' => array())
-                                );
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'include', array());
+        $config->setConfiguration('Renderer_JSON', 'exclude', array());
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
+        $json = ob_get_contents();
         ob_end_clean();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
@@ -204,17 +203,19 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testExclude()
     {
-        $value = array('content' => 'hello world',
-                       'spam'    => 'spamspamspam'
-                      );
-        $view = &$this->getView($value,
-                                array('include' => array(),
-                                      'exclude' => array('spam')),
-                                'Piece_Unity_Plugin_View'
-                               );
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'hello world');
+        $viewElement->setElement('spam', 'spamspamspam');
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'include', array());
+        $config->setConfiguration('Renderer_JSON', 'exclude', array('spam'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
         $json = ob_get_contents();
         ob_end_clean();
 
@@ -230,14 +231,17 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testInclude()
     {
-        $value = array('_content' => 'hello world');
-        $view = &$this->getView($value,
-                                array('include' => array('_content')),
-                                'Piece_Unity_Plugin_View'
-                               );
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('_content', 'hello world');
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'include', array('_content'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
         $json = ob_get_contents();
         ob_end_clean();
 
@@ -248,40 +252,48 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testContentType()
     {
-        $value = array('content' => 'hello world');
-        $view = &$this->getView($value,
-                                array('contentType' => 'text/json',
-                                      'include'     => array(),
-                                      'exclude'     => array())
-                               );
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'hello world');
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'contentType', 'text/json');
+        $config->setConfiguration('Renderer_JSON', 'include', array());
+        $config->setConfiguration('Renderer_JSON', 'exclude', array());
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
         $json = ob_get_contents();
         ob_end_clean();
 
-        $this->assertEquals('text/json', $view->_contentType);
+        $this->assertEquals('text/json', $renderer->_contentType);
     }
 
     function testJSONP()
     {
         $_GET['callback'] = 'callback';
-        $value = array('content' => 'hello world');
-        $view = &$this->getView($value,
-                                array('contentType'   => 'text/javascript',
-                                      'include'       => array(),
-                                      'exclude'       => array(),
-                                      'useJSONP'      => true,
-                                      'callbackKey' => 'callback')
-                                );
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'hello world');
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'contentType', 'text/javascript');
+        $config->setConfiguration('Renderer_JSON', 'include', array());
+        $config->setConfiguration('Renderer_JSON', 'exclude', array());
+        $config->setConfiguration('Renderer_JSON', 'useJSONP', true);
+        $config->setConfiguration('Renderer_JSON', 'callbackKey', 'callback');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
-        $view->invoke();
+        $renderer->invoke();
         $json = ob_get_contents();
         ob_end_clean();
 
         $this->assertEquals('callback({"content":"hello world"});', $json);
-        $this->assertEquals('text/javascript', $view->_contentType);
+        $this->assertEquals('text/javascript', $renderer->_contentType);
         
         unset($_GET['callback']);
     }
@@ -289,12 +301,22 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     function testDetectCicularReferenceInArray()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
+        $context = &Piece_Unity_Context::singleton();
         $b = array(false, 2, 3.0, '4');
         $a = array(1, 2, 'spam', &$b);
         $b[] = &$a;
-        $view = &$this->getView(array('foo', $a));
-        $view->invoke();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', $a);
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'contentType', 'text/javascript');
+        $config->setConfiguration('Renderer_JSON', 'include', array());
+        $config->setConfiguration('Renderer_JSON', 'exclude', array());
+        $config->setConfiguration('Renderer_JSON', 'useJSONP', true);
+        $config->setConfiguration('Renderer_JSON', 'callbackKey', 'callback');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
+        $renderer->invoke();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
@@ -311,15 +333,25 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     function testDetectCicularReferenceInObject()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
+        $context = &Piece_Unity_Context::singleton();
         $foo = &new stdClass();
         $bar = &new stdClass();
         $baz = &new stdClass();
         $foo->bar = &$bar;
         $bar->baz = &$baz;
         $baz->foo = &$foo;
-        $view = &$this->getView(array('foo', &$foo));
-        $view->invoke();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElementByRef('foo', $foo);
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_JSON', 'contentType', 'text/javascript');
+        $config->setConfiguration('Renderer_JSON', 'include', array());
+        $config->setConfiguration('Renderer_JSON', 'exclude', array());
+        $config->setConfiguration('Renderer_JSON', 'useJSONP', true);
+        $config->setConfiguration('Renderer_JSON', 'callbackKey', 'callback');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
+        $renderer->invoke();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
