@@ -42,7 +42,6 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Error.php';
-require_once 'PEAR.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_JSON
 
@@ -145,6 +144,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
     function encodeWithHTMLAJAX($value)
     {
+        include_once 'PEAR.php';
         $encoder = &new HTML_AJAX_JSON();
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
         $json = $encoder->encode($value);
