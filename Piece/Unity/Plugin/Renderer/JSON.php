@@ -5,7 +5,7 @@
  * PHP versions 4 and 5
  *
  * Copyright (c) 2006 Chihiro Sakatoku <csakatoku@users.sourceforge.net>,
-*                2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+*                2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Component_JSON
  * @copyright  2006 Chihiro Sakatoku <csakatoku@users.sourceforge.net>
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://pecl.php.net/package/json
@@ -52,7 +52,7 @@ require_once 'PEAR.php';
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Component_JSON
  * @copyright  2006 Chihiro Sakatoku <csakatoku@users.sourceforge.net>
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://pecl.php.net/package/json
@@ -107,13 +107,13 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
          */
         $visited = array();
         $this->_visit($data, $visited);
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 
         // finally encode the data as JSON.
         $json = call_user_func($this->_encoderCallback, $data);
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 
@@ -213,7 +213,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             }
 
             $this->_visit($next, $visited);
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
         }
@@ -245,7 +245,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             }
 
             $this->_visit($next, $visited);
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
         }

@@ -83,7 +83,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
@@ -93,7 +92,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         Piece_Unity_Context::clear();
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function jsonEncode($value)
@@ -167,7 +165,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testEncodeFailure()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $context = &Piece_Unity_Context::singleton();
 
         /*
@@ -188,17 +185,17 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
 
         ob_start();
+        Piece_Unity_Error::disableCallback();
         $renderer->invoke();
+        Piece_Unity_Error::enableCallback();
         $json = ob_get_contents();
         ob_end_clean();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testExclude()
@@ -300,7 +297,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testDetectCicularReferenceInArray()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $context = &Piece_Unity_Context::singleton();
         $b = array(false, 2, 3.0, '4');
         $a = array(1, 2, 'spam', &$b);
@@ -316,9 +312,11 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
+        Piece_Unity_Error::disableCallback();
         $renderer->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
@@ -326,13 +324,10 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('_visitArray'),
                             strtolower($error['context']['function'])
                             );
-
-        Piece_Unity_Error::popCallback();
     }
     
     function testDetectCicularReferenceInObject()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $context = &Piece_Unity_Context::singleton();
         $foo = &new stdClass();
         $bar = &new stdClass();
@@ -351,9 +346,11 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $renderer = &Piece_Unity_Plugin_Factory::factory('Renderer_JSON');
+        Piece_Unity_Error::disableCallback();
         $renderer->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
@@ -361,7 +358,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('_visitObject'),
                             strtolower($error['context']['function'])
                             );
-        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/
