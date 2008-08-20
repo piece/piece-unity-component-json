@@ -387,4 +387,3 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

@@ -431,4 +431,3 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>
