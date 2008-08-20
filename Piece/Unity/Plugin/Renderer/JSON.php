@@ -93,9 +93,6 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
      */
     function invoke()
     {
@@ -178,7 +175,6 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      * @param mixed &$value   the value to be visited.
      * @param array &$visited the array of objects which have been visited.
      * @return boolean
-     * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
      */
     function _visit(&$value, &$visited)
     {
@@ -318,8 +314,6 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
     /**
      * Defines and initializes extension points and configuration points.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function _initialize()
     {
