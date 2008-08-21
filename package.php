@@ -41,11 +41,13 @@ require_once 'PEAR.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.0.0';
+$releaseVersion = '1.1.0';
 $releaseStability = 'stable';
 $apiVersion = '1.0.0';
 $apiStability = 'stable';
-$notes = 'The first release of Piece_Unity_Component_JSON.';
+$notes = 'A new release of Piece_Unity_Component_JSON is now available.
+
+What\'s New in Piece_Unity_Component_JSON 1.1.0';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',
