@@ -90,7 +90,6 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     {
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Context::clear();
-        Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Error::clearErrors();
     }
 
