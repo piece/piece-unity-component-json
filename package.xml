@@ -20,7 +20,7 @@
   <active>yes</active>
  </developer>
  <date>2008-08-21</date>
- <time>21:02:54</time>
+ <time>21:14:00</time>
  <version>
   <release>1.1.0</release>
   <api>1.0.0</api>
@@ -80,7 +80,7 @@ What&apos;s New in Piece_Unity_Component_JSON 1.1.0</notes>
    <package>
     <name>Piece_Unity</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.0.0</min>
+    <min>1.5.0</min>
    </package>
   </required>
   <optional>
