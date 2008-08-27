@@ -39,8 +39,13 @@
 error_reporting(E_ALL);
 
 if (file_exists(dirname(__FILE__) . '/../../../Piece/Unity.php')) {
+    set_include_path(realpath(dirname(__FILE__) . '/../../..') . PATH_SEPARATOR .
+                     get_include_path()
+                     );
+}
+
+if (file_exists(dirname(__FILE__) . '/../Piece/Unity/Plugin/Renderer/JSON.php')) {
     set_include_path(realpath(dirname(__FILE__) . '/..') . PATH_SEPARATOR .
-                     realpath(dirname(__FILE__) . '/../../..') . PATH_SEPARATOR .
                      get_include_path()
                      );
 }
