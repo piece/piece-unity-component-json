@@ -47,7 +47,9 @@ $apiVersion = '1.0.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity_Component_JSON is now available.
 
-What\'s New in Piece_Unity_Component_JSON 1.1.0';
+What\'s New in Piece_Unity_Component_JSON 1.1.0
+
+ * Some minor updates: Some minor updates to Piece_Unity 1.5.0 error handling has been included in this release.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',

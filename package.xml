@@ -19,8 +19,8 @@
   <email>csakatoku@users.sourceforge.net</email>
   <active>yes</active>
  </developer>
- <date>2008-08-21</date>
- <time>21:14:00</time>
+ <date>2008-09-04</date>
+ <time>19:39:50</time>
  <version>
   <release>1.1.0</release>
   <api>1.0.0</api>
@@ -32,7 +32,9 @@
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity_Component_JSON is now available.
 
-What&apos;s New in Piece_Unity_Component_JSON 1.1.0</notes>
+What&apos;s New in Piece_Unity_Component_JSON 1.1.0
+
+ * Some minor updates: Some minor updates to Piece_Unity 1.5.0 error handling has been included in this release.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="docs">
@@ -110,11 +112,13 @@ What&apos;s New in Piece_Unity_Component_JSON 1.1.0</notes>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-08-21</date>
+   <date>2008-09-04</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity_Component_JSON is now available.
 
-What&apos;s New in Piece_Unity_Component_JSON 1.1.0</notes>
+What&apos;s New in Piece_Unity_Component_JSON 1.1.0
+
+ * Some minor updates: Some minor updates to Piece_Unity 1.5.0 error handling has been included in this release.</notes>
   </release>
   <release>
    <version>
